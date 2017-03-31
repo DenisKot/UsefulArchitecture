@@ -1,5 +1,6 @@
 namespace UserfulArchitecture.Data
 {
+    using System.Data.Common;
     using System.Data.Entity;
     using UsefulArchitecture.Domain.Order;
     using UsefulArchitecture.Domain.Product;
@@ -17,9 +18,17 @@ namespace UserfulArchitecture.Data
         {
         }
 
+        public AppDatabaseContext(DbConnection connection) : base(connection, true)
+        {
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OrderProduct>().HasRequired(x => x.Parent).WithMany(x => x.ProductOrders).Map(m => m.MapKey("Order_Id")).WillCascadeOnDelete(true);
+            modelBuilder.Entity<OrderProduct>()
+                .HasRequired(x => x.Parent)
+                .WithMany(x => x.ProductOrders)
+                .Map(m => m.MapKey("Order_Id"))
+                .WillCascadeOnDelete(true);
         }
     }
 }
